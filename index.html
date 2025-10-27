@@ -19,6 +19,16 @@
 
     <!-- Contenu principal du quiz -->
     <main id="quiz">
+      <!-- Message d'accueil / contexte du projet -->
+      <section id="intro" aria-labelledby="intro-title">
+        <h2 id="intro-title" class="visually-hidden">À propos de ce projet</h2>
+        <p>
+          Ce quiz est un exemple minimal et accessible destiné aux apprenant·es de l’Ada Tech School pour visualiser l’attendu de leur premier projet de formation.
+          Le code source est disponible sur
+          <a href="https://github.com/anais0210/quiz-js-v1">GitHub</a>.
+          C’est un projet « vibecoder » (petites itérations guidées, commentées).
+        </p>
+      </section>
       <!-- Progression globale (mise à jour par JS) -->
       <p id="progress">Progression : 0/0</p>
 
@@ -60,7 +70,14 @@
     </main>
 
     <footer>
-      <p><small>Accessible, respect du clavier, sans pisteurs.</small></p>
+      <nav aria-labelledby="footer-links-title">
+        <h2 id="footer-links-title" class="visually-hidden">Autres projets</h2>
+        <ul class="footer-links">
+          <li><a href="https://checklist-rncp5-dwwm.vercel.app/">Checklist RNCP 5 DWWM</a></li>
+          <li><a href="https://quiz4dev.vercel.app/">Quiz4Dev</a></li>
+          <li><a href="https://checklist-rncp6-cda.vercel.app/">Checklist RNCP 6 CDA</a></li>
+        </ul>
+      </nav>
     </footer>
 
     <!-- Script principal, chargé en différé -->

@@ -26,6 +26,10 @@
   --color-muted: #6b7280;
   --color-focus: #f59e0b; /* outline bien visible */
   --radius: 8px;
+  /* Couleurs pour surface sombre (footer) */
+  --color-surface-inverse: #0b1220;
+  --color-text-on-dark: #f9fafb;
+  --color-border-on-dark: rgba(255, 255, 255, 0.16);
 }
 
 html { color-scheme: light; }
@@ -43,6 +47,25 @@ main#quiz {
   max-width: 720px;
   margin: 0 auto;
 }
+
+/* Carte d'introduction */
+#intro {
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 8px 0 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Footer links */
+.footer-links {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.footer-links a { text-decoration: none; }
+.footer-links a:hover { text-decoration: underline; }
 
 #progress { margin: 0 0 12px; color: var(--color-muted); }
 #best-score-row { display: flex; align-items: center; gap: 12px; margin: 4px 0 12px; }
@@ -99,10 +122,38 @@ button:focus-visible {
   background: transparent;
   color: var(--color-accent);
   border: none;
-  padding: 0;
-  min-width: auto; min-height: auto;
+  padding: 10px 12px;
+  min-height: 44px; min-width: 44px;
+  border-radius: var(--radius);
 }
 .link-btn:hover { text-decoration: underline; }
 .link-btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+/* Footer moderne */
+footer {
+  background: var(--color-surface-inverse);
+  color: var(--color-text-on-dark);
+}
+footer nav { max-width: 720px; margin: 0 auto; }
+.footer-links {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex; gap: 12px; flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-links a {
+  text-decoration: none;
+  color: var(--color-text-on-dark);
+  border: 1px solid var(--color-border-on-dark);
+  border-radius: 9999px;
+  padding: 8px 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 40px; /* les pastilles sont légèrement plus petites mais restent cliquables */
+}
+.footer-links a:hover { background: rgba(255, 255, 255, 0.06); }
+.footer-links a:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
 
 
