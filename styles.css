@@ -33,12 +33,16 @@
 }
 
 html { color-scheme: light; }
+html, body { height: 100%; }
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   line-height: 1.6;
   color: var(--color-text);
   background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header, footer { padding: 16px; }
@@ -46,6 +50,7 @@ main#quiz {
   padding: 16px;
   max-width: 720px;
   margin: 0 auto;
+  flex: 1;
 }
 
 /* Carte d'introduction */
