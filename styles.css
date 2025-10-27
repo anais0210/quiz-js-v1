@@ -16,4 +16,79 @@
   position: static;
 }
 
+/* === Styles de base accessibles (étape 2) === */
+:root {
+  --color-surface: #ffffff;
+  --color-text: #111827; /* gris très foncé → contraste AA */
+  --color-accent: #0b57d0; /* bleu accessible avec texte blanc */
+  --color-accent-hover: #0847a8;
+  --color-border: #e5e7eb;
+  --color-muted: #6b7280;
+  --color-focus: #f59e0b; /* outline bien visible */
+  --radius: 8px;
+}
+
+html { color-scheme: light; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+header, footer { padding: 16px; }
+main#quiz {
+  padding: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+#progress { margin: 0 0 12px; color: var(--color-muted); }
+#question-text { font-size: 1.125rem; margin: 8px 0 16px; }
+#feedback { min-height: 1.5em; margin: 8px 0 16px; }
+
+/* Boutons: tailles tactiles 44×44, contrastes AA, focus visible */
+button {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; min-width: 44px;
+  padding: 10px 16px; border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: #ffffff; color: var(--color-text);
+  cursor: pointer; font-weight: 600;
+}
+button:hover { background: #f9fafb; }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Boutons d'action principaux */
+#actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 0; }
+#start-btn, #next-btn, #restart-btn {
+  background: var(--color-accent);
+  color: #ffffff;
+  border-color: transparent;
+}
+#start-btn:hover, #next-btn:hover:not(:disabled), #restart-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+/* Boutons de réponses qui seront injectés dans #answers */
+#answers { display: grid; gap: 8px; }
+#answers button { width: 100%; text-align: left; }
+
+/* Réduction des mouvements si l'utilisateur·ice le demande */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* État sélectionné pour les réponses */
+#answers button.selected,
+#answers button[aria-pressed="true"] {
+  background: #e8f0fe; /* fond pâle contrasté */
+  border-color: var(--color-accent);
+}
+
 
