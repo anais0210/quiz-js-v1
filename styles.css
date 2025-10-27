@@ -45,6 +45,9 @@ main#quiz {
 }
 
 #progress { margin: 0 0 12px; color: var(--color-muted); }
+#best-score-row { display: flex; align-items: center; gap: 12px; margin: 4px 0 12px; }
+#best-score { margin: 0; color: var(--color-muted); }
+#timer { margin: 0 0 12px; font-weight: 700; }
 #question-text { font-size: 1.125rem; margin: 8px 0 16px; }
 #feedback { min-height: 1.5em; margin: 8px 0 16px; }
 
@@ -90,5 +93,16 @@ button:focus-visible {
   background: #e8f0fe; /* fond pâle contrasté */
   border-color: var(--color-accent);
 }
+
+/* Bouton de type lien (pour Réinitialiser) */
+.link-btn {
+  background: transparent;
+  color: var(--color-accent);
+  border: none;
+  padding: 0;
+  min-width: auto; min-height: auto;
+}
+.link-btn:hover { text-decoration: underline; }
+.link-btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 
 

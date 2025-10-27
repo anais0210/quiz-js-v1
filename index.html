@@ -22,6 +22,15 @@
       <!-- Progression globale (mise à jour par JS) -->
       <p id="progress">Progression : 0/0</p>
 
+      <!-- Meilleur score (stocké en localStorage) et réinitialisation -->
+      <div id="best-score-row">
+        <p id="best-score" aria-live="polite">Meilleur score : —</p>
+        <button id="reset-best-btn" type="button" class="link-btn">Réinitialiser</button>
+      </div>
+
+      <!-- Timer par question (mis à jour par JS) -->
+      <p id="timer" aria-live="off" hidden>Temps : 20s</p>
+
       <!-- Zone de question -->
       <section id="question" aria-labelledby="question-label">
         <h2 id="question-label" class="visually-hidden">Question</h2>

@@ -12,6 +12,9 @@ let currentQuestionIndex = 0;
 let score = 0;
 let selectedAnswerIndex = null; // mis à jour à la sélection (étape 5)
 let questionChecked = false; // empêche de recompter plusieurs fois (étape 6)
+let bestScore = null; // meilleur score persistant (étape 9)
+let timerId = null; // identifiant du timer (étape 10)
+let timeLeft = 20; // secondes restantes pour la question courante (étape 10)
 
 // Utilitaires DOM (résolus au chargement)
 function getEl(id) { return document.getElementById(id); }
@@ -22,16 +25,19 @@ function handleNoQuestions() {
   const startBtn = getEl('start-btn');
   const nextBtn = getEl('next-btn');
   const progressEl = getEl('progress');
+  const timerEl = getEl('timer');
 
   feedbackEl.textContent = "Erreur : aucune question n’est disponible. Veuillez réessayer plus tard.";
   progressEl.textContent = 'Progression : 0/0';
   if (startBtn) startBtn.disabled = true;
   if (nextBtn) nextBtn.disabled = true;
+  if (timerEl) timerEl.hidden = true;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   // Met à jour la progression initiale si des questions existent
   const progressEl = getEl('progress');
+  initBestScoreUI();
   if (!Array.isArray(questions) || questions.length === 0) {
     handleNoQuestions();
     return; // Stoppe toute logique future tant que les données sont absentes
@@ -54,6 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (restartBtn) {
     restartBtn.addEventListener('click', restartQuiz);
   }
+  // Branche le bouton Réinitialiser meilleur score
+  const resetBestBtn = getEl('reset-best-btn');
+  if (resetBestBtn) {
+    resetBestBtn.addEventListener('click', resetBestScore);
+  }
 });
 
 
@@ -62,12 +73,14 @@ function startQuiz() {
   score = 0;
   currentQuestionIndex = 0;
   questionChecked = false;
+  clearTimer();
 
   const startBtn = getEl('start-btn');
   const nextBtn = getEl('next-btn');
   const restartBtn = getEl('restart-btn');
   const feedbackEl = getEl('feedback');
   const progressEl = getEl('progress');
+  const timerEl = getEl('timer');
 
   if (startBtn) startBtn.hidden = true;
   if (restartBtn) restartBtn.hidden = true; // on ne l'utilisera qu'en fin de quiz
@@ -80,6 +93,7 @@ function startQuiz() {
 
   if (feedbackEl) feedbackEl.textContent = '';
   if (progressEl) progressEl.textContent = `Progression : 1/${questions.length}`;
+  if (timerEl) timerEl.hidden = false;
 
   renderQuestion(currentQuestionIndex);
 }
@@ -91,6 +105,7 @@ function renderQuestion(index) {
   const answersEl = getEl('answers');
   const nextBtn = getEl('next-btn');
   const feedbackEl = getEl('feedback');
+  const timerEl = getEl('timer');
 
   if (!question || !questionTextEl || !answersEl) return;
 
@@ -121,6 +136,13 @@ function renderQuestion(index) {
     nextBtn.textContent = 'Valider';
     nextBtn.dataset.state = 'validate';
   }
+  // (Re)lance le timer de 20 secondes
+  if (timerEl) {
+    timeLeft = 20;
+    timerEl.textContent = `Temps : ${timeLeft}s`;
+    timerEl.hidden = false;
+  }
+  startTimer();
 
   // Place le focus sur la première réponse pour un flux clavier naturel
   const firstAnswerBtn = answersEl.querySelector('button');
@@ -153,6 +175,7 @@ function checkAnswer() {
   const feedbackEl = getEl('feedback');
   const answersEl = getEl('answers');
   const nextBtn = getEl('next-btn');
+  const timerEl = getEl('timer');
   if (!answersEl || selectedAnswerIndex === null) return;
   if (questionChecked) return; // évite double comptage
 
@@ -176,6 +199,8 @@ function checkAnswer() {
   });
 
   questionChecked = true;
+  clearTimer();
+  if (timerEl) timerEl.textContent = `Temps : ${timeLeft}s`;
   // Prépare le bouton pour passer à la question suivante
   if (nextBtn) {
     nextBtn.disabled = false;
@@ -222,6 +247,7 @@ function showFinalScore() {
   const feedbackEl = getEl('feedback');
   const nextBtn = getEl('next-btn');
   const restartBtn = getEl('restart-btn');
+  const timerEl = getEl('timer');
 
   if (questionTextEl) questionTextEl.textContent = 'Résultats du quiz';
   if (answersEl) {
@@ -236,6 +262,9 @@ function showFinalScore() {
     restartBtn.hidden = false;
     restartBtn.focus();
   }
+  clearTimer();
+  if (timerEl) timerEl.hidden = true;
+  updateBestScore();
 }
 
 // Relance le quiz (étape 8)
@@ -243,5 +272,79 @@ function restartQuiz() {
   const startBtn = getEl('start-btn');
   if (startBtn) startBtn.hidden = false; // option A: ré-afficher Commencer, ou lancer directement
   startQuiz(); // relance directement pour une UX fluide
+}
+
+// ===== Étape 9: Best Score (localStorage) =====
+function initBestScoreUI() {
+  const stored = localStorage.getItem('bestScore');
+  bestScore = stored !== null ? Number(stored) : null;
+  renderBestScore();
+}
+
+function renderBestScore() {
+  const bestEl = getEl('best-score');
+  if (!bestEl) return;
+  if (bestScore === null) {
+    bestEl.textContent = 'Meilleur score : —';
+  } else {
+    bestEl.textContent = `Meilleur score : ${bestScore}/${questions.length}`;
+  }
+}
+
+function updateBestScore() {
+  if (bestScore === null || score > bestScore) {
+    bestScore = score;
+    localStorage.setItem('bestScore', String(bestScore));
+    renderBestScore();
+  }
+}
+
+function resetBestScore() {
+  bestScore = null;
+  localStorage.removeItem('bestScore');
+  renderBestScore();
+}
+
+// ===== Étape 10: Timer par question (20s) =====
+function startTimer() {
+  clearTimer();
+  timerId = setInterval(() => {
+    timeLeft -= 1;
+    const timerEl = getEl('timer');
+    if (timerEl) timerEl.textContent = `Temps : ${Math.max(timeLeft, 0)}s`;
+    if (timeLeft <= 0) {
+      clearTimer();
+      handleTimeOut();
+    }
+  }, 1000);
+}
+
+function clearTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function handleTimeOut() {
+  if (questionChecked) return;
+  // Si le temps est écoulé sans sélection, on verrouille et affiche un feedback
+  const answersEl = getEl('answers');
+  const feedbackEl = getEl('feedback');
+  const nextBtn = getEl('next-btn');
+  const { correctIndex, answers } = questions[currentQuestionIndex];
+
+  if (feedbackEl) feedbackEl.textContent = `Temps écoulé. La bonne réponse était « ${answers[correctIndex]} ».`;
+  if (answersEl) {
+    const buttons = answersEl.querySelectorAll('button');
+    buttons.forEach((b) => { b.disabled = true; });
+  }
+  questionChecked = true;
+  if (nextBtn) {
+    nextBtn.disabled = false;
+    nextBtn.textContent = 'Question suivante';
+    nextBtn.dataset.state = 'next';
+    nextBtn.focus();
+  }
 }
 
