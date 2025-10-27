@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Quiz JavaScript</title>
+    <!-- Feuille de styles du projet -->
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <!-- Lien d'évitement pour aller directement au contenu principal -->
+    <a href="#quiz" class="skip-link">Aller au contenu principal</a>
+
+    <header>
+      <!-- Un seul h1 pour la page -->
+      <h1>Quiz JavaScript</h1>
+    </header>
+
+    <!-- Contenu principal du quiz -->
+    <main id="quiz">
+      <!-- Progression globale (mise à jour par JS) -->
+      <p id="progress">Progression : 0/0</p>
+
+      <!-- Zone de question -->
+      <section id="question" aria-labelledby="question-label">
+        <h2 id="question-label" class="visually-hidden">Question</h2>
+        <p id="question-text"><!-- Texte de la question injecté par JS --></p>
+      </section>
+
+      <!-- Zone des réponses (les boutons seront générés par JS) -->
+      <section id="answers" aria-labelledby="answers-label">
+        <h2 id="answers-label" class="visually-hidden">Réponses</h2>
+        <!-- Boutons de réponses injectés ici -->
+      </section>
+
+      <!-- Zone de feedback annoncée poliment par un lecteur d'écran -->
+      <div id="feedback" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- Zone des actions (boutons) -->
+      <div id="actions">
+        <button id="start-btn" type="button">Commencer</button>
+        <button id="next-btn" type="button" disabled>Question suivante</button>
+        <button id="restart-btn" type="button" hidden>Rejouer</button>
+      </div>
+
+      <!-- Fallback si JS est désactivé -->
+      <noscript>
+        <p>JavaScript est requis pour jouer à ce quiz.</p>
+      </noscript>
+    </main>
+
+    <footer>
+      <p><small>Accessible, respect du clavier, sans pisteurs.</small></p>
+    </footer>
+
+    <!-- Script principal, chargé en différé -->
+    <script src="script.js" defer></script>
+  </body>
+  </html>
+
+
